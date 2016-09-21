@@ -3,7 +3,7 @@
 var articles = [];
 
 //object constructor to create instances of blog post data
-function Articles(opts) {
+function Article(opts) {
   //opts is convention for data object we are passing in
   this.title = opts.title;
   this.category = opts.category;
@@ -17,24 +17,21 @@ function Articles(opts) {
 //makes a copy assigns specific values to properties
 Article.prototype.toHtml = function() {
   var $newArticle = $('article.template').clone();
-  $newArticle.attr('data-category', this.category);
   /*
   TODO: now use jQuery to fill in the rest of the current template clone with properties from this particular article instance.
-  author name
-  author URL
-  article title
   article body
-  publication date
   */
 
-  $newArticle.find('time[pubdate]').attr('title', this.publishedOn);
-  $newArticle.find('time').html('about ' + parseINt(new Date() - newDate(this.publishedOn))/60/60/24/1000 + ' days ago' );
+  $newArticle.find('h1').text(this.title); //good
+  $newArticle.attr('data-category', this.category); //good
+  $newArticle.find('a').text(this.author); //good
+  $newArticle.attr('href', this.authorUrl); //good
+  $newArticle.find('.article-body').html(this.body);
 
-  /* TODO: This clone article is no longer a template,
- as it now has real data attached to it! We need to account
- for that before this current article gets rendered to our
- DOM. */
+  $newArticle.find('time[pubdate]').attr('title', this.publishedOn); //good
+  $newArticle.find('time').html('about ' + parseInt((new Date() - new Date(this.publishedOn))/60/60/24/1000) + ' days ago' ); //good
 
+  $newArticle.removeClass('template');
   return $newArticle;
 };
 
@@ -49,6 +46,6 @@ ourLocalData.forEach(function(ele) {
 });
 
 //appends each blog post in the section w/id 'articles'
-article.forEach(function(a) {
+articles.forEach(function(a) {
   $('#articles').append(a.toHtml());
 });
